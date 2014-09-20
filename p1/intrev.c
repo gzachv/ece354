@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     int numInt;
     int i;
 
-    /* if a single command line argument is not specified, print usage
+    /* if command line arguments are not specified, print usage
      * information and exit
      */
     if (argc != 3) {
