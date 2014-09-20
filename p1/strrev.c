@@ -52,13 +52,90 @@ Node* push(Node* oldTOS, int valToPush){
 	else{
 		newTOS->next = oldTOS;
 	}
-
 	return newTOS;
 }
 
 /* pop will remove the node at the top of the stack and return the new head 
  * 
  * @param: oldTOS pointer to old head(top of stack)
- * @return: newTOS pointer to the new head, or 0 for error
+ * @return: data value of removed node, or 0 for error
  */
+int pop(Node **pstackptr){
+	if(pstackptr == NULL || (*pstackptr) == NULL){
+		return 0;
+	}
 
+	/* pop from list and reconnect pointers */
+	Node *tempNode = *pstackptr;
+	int poppedValue = tempNode->value;	
+	*pstackptr = tempNode->next;
+	free(tempNode);
+
+	return poppedValue;
+}
+
+/* Reads a file of ACSII integers and creates output file of
+ * the same integers in revers order */
+int main(int argc, char *argv[])
+{
+    char *infile;
+    char *outfile;
+    FILE *fdr;
+    FILE *fdw;
+    Node *head_ptr = NULL;    
+    int intRead;
+
+     /* if command line arguments are not specified, print usage
+     * information and exit
+     */
+    if (argc != 3) {
+        fprintf(stderr, "usage: intrev <infile.int> <outfile_rev>\n");
+        exit(1);
+    }
+
+    /***********************Open files ******************************************/
+    /* try to open the input file */
+    infile = argv[1];
+    fdr = fopen(infile,"r");
+    /* if there was a file open error, print message and exit */
+    if(fdr == NULL){
+        fprintf(stderr, "usage: strtoboth error opening read file\n");
+        exit(1);
+    } 
+    /* try to open output file */
+    outfile = argv[2];
+    fdw = fopen(outfile,"w");
+    /* if there was a file open error, print message and exit */
+    if(fdw == NULL){
+        fprintf(stderr, "usage: strtoboth error opening outfile 1\n");
+        exit(1);
+    }
+
+    /***********************Read Data ******************************************/
+    /* Read in data check for end of file or read error (EOF) and push data onto stack
+     * if either occurs, stop printing data */
+     while(fscanf(fdr, "%d\n", &intRead) != EOF){
+	head_ptr = push(head_ptr,intRead);
+     }
+ 
+    /***********************Write data ******************************************/
+    /* pop data from stack and write to output file so that is is output in reverse order */
+    while(head_ptr != NULL){
+	fprintf(fdw, "%d\n",pop(&head_ptr));
+    }
+
+    /***********************Close files ******************************************/
+    /* Read in data check for end of file or read error (EOF) and push data onto stack
+     * check if input file close was successful, if not print error message and exit */
+    if(fclose(fdr) != 0){
+         fprintf(stderr, "usage: strtoboth error closing input file\n");
+         exit(1);
+     }
+     /* check if first output file close was successful, if not print error message and exit */
+     if(fclose(fdw) != 0){
+         fprintf(stderr, "usage: strtoboth error closing output1 file\n");
+         exit(1);
+     }
+
+     return 0;
+}
