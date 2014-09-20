@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 	exit(1);
     }
     fsize = fileStat.st_size;/*set fsize based on info from fstat*/
-    numInt = fsize/4;/* num ints in file = file size (in bytes)/4 */
+    numInt = fsize/sizeof(int);/* num ints in file = file size (in bytes)/4 */
 
     /* Dynamically allocate memory for array based on file size*/
     buffArr = malloc(numInt * sizeof(int));
