@@ -38,21 +38,20 @@ int main(int argc, char *argv[])
 	fd = open(infile,O_RDONLY);
 	/* if there was a file open error, print message and exit */
 	if(fd == -1){
-		fprintf(stderr, "usage: intcat <file>\n");
+		fprintf(stderr, "usage: intcat file read error\n");
 		exit(1);
 	}
 
 	/* check for end of file or read error (EOF)
 	 * if either occurs, stop printing data */
 	readNum = read(fd, buffer, MAX);
-
 	if(readNum == -1){
 		fprintf(stderr, "usage: incat read failure\n");
 		exit(1);
 	}
 
+	/* print out the contents of the buffer to the console */
 	for(i = 0; i < readNum/4; i++){
-
 		printf("%d\n",buffer[i]);
 	}
 
