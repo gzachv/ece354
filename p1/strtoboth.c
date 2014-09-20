@@ -20,6 +20,8 @@
 #include <assert.h>
 #include <unistd.h>
 
+#define MAX sizeof(int)
+
 /* This program reads strings from an ASCII and outputs 
  * one file in integer format and one file in modified ASCII
  * modified ASCII file (.str2) must be read with cat (since it is not classic ASCII)
@@ -27,16 +29,13 @@
 int main(int argc, char *argv[])
 {
     char *infile;
-    char *outfile1;
     char *outfile2;
     FILE *fdr;
-    FILE *fdw1;
     FILE *fdw2;
+    int readfile;
+    int writefile;
     int intRead;
-    int numInt;
-    int readNum;
-    char *buffer;
-    int i;
+    char numRead[sizeof(int)];
 
     /* if command line arguments are not not specified, print usage
      * information and exit
@@ -56,10 +55,9 @@ int main(int argc, char *argv[])
     }
 
     /* try to open the first output file */
-    outfile1 = argv[2];
-    fdw1 = fopen(outfile1,"w");
+    writefile = open(argv[2],O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR|S_IWUSR);
     /* if there was a file open error, print message and exit */
-    if(fdw1 == NULL){
+    if(writefile == -1){
 	fprintf(stderr, "usage: strtoboth error opening outfile 1\n");
 	exit(1);
     }
@@ -73,6 +71,9 @@ int main(int argc, char *argv[])
 	exit(1);
     }
 
+
+    
+    /*****************print data to output file 2 as modified ASCII **********************/
     /* Read in data check for end of file or read error (EOF) and print data
      * if either occurs, stop printing data */
     while(fscanf(fdr, "%d\n", &intRead) != EOF){
@@ -84,21 +85,48 @@ int main(int argc, char *argv[])
 	}
     }
 
+
+    /*****************close read and output2 file **********************/
     /* check if input file close was successful, if not print error message and exit */
     if(fclose(fdr) != 0){
 	fprintf(stderr, "usage: strtoboth error closing input file\n");
 	exit(1);
     }
 
+    /* check if second output file close was successful, if not print error message and exit */
+    if(fclose(fdw2) != 0){
+	fprintf(stderr, "usage: strtoboth error closing output2 file\n");
+	exit(1);
+    }
+
+    /*****************reopen readfile for int reading **********************/
+    /* try to reopen the input file */
+    readfile = open(argv[1],O_RDONLY);
+    /* if there was a file open error, print message and exit */
+    if(readfile == -1){
+	fprintf(stderr, "usage: strtoboth error opening outfile 1\n");
+	exit(1);
+    }
+ 
+    /*****************print data to output file 1 as integers **********************/
+    while(read(readfile,numRead,sizeof(int)) > 0){
+ 	intRead = atoi(numRead);
+	if(write(writefile,&intRead, sizeof(int)) != sizeof(int)) {
+           	 fprintf (stderr, "usage: strtoboth bad write to file \n");
+           	 exit(1);
+            }
+    }
+
+    /*****************close output file 1 and input file **********************/
     /* check if first output file close was successful, if not print error message and exit */
-    if(fclose(fdw1) != 0){
+    if(close(writefile) == -1){
 	fprintf(stderr, "usage: strtoboth error closing output1 file\n");
 	exit(1);
     }
 
-    /* check if second output file close was successful, if not print error message and exit */
-    if(fclose(fdw2) != 0){
-	fprintf(stderr, "usage: strtoboth error closing output2 file\n");
+    /* check if input file close was successful, if not print error message and exit */
+    if(close(readfile) == -1){
+	fprintf(stderr, "usage: strtoboth error closing input file\n");
 	exit(1);
     }
 
