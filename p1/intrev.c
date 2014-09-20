@@ -20,8 +20,8 @@
 #include <assert.h>
 #include <unistd.h>
 
-/* This program opens a filewrites each element of an array of integers
- */
+/* Intrev opens a file of integers and saves them to an array
+ * the array is then written to an output file in reverse order */
 int main(int argc, char *argv[])
 {
     char *infile;
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
      * information and exit
      */
     if (argc != 3) {
-	fprintf(stderr, "usage: intrev <file> <file>\n");
+	fprintf(stderr, "usage: intrev <infile.int> <outfile_rev>\n");
 	exit(1);
     }
 
@@ -51,7 +51,9 @@ int main(int argc, char *argv[])
 	exit(1);
     }
 
-    /* try to open the file to write to */
+    /* try to open the file to write to,
+     * if the file doesnt exit, create; if the file is not empty, overwite
+     * file created with read and write permission */
     outfile = argv[2];
     fdw = open(outfile,O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR|S_IWUSR);
     /* if there was a file open error, print message and exit */
@@ -66,8 +68,9 @@ int main(int argc, char *argv[])
 	fprintf(stderr, "usage: intrev could not read from file\n");
 	exit(1);
     }
-    fsize = fileStat.st_size;/*set fsize based on infor from fstat*/
-    numInt = fsize/4;
+    fsize = fileStat.st_size;/*set fsize based on info from fstat*/
+    numInt = fsize/4;/* num ints in file = file size (in bytes)/4 */
+
     /* Dynamically allocate memory for array based on file size*/
     buffArr = malloc(numInt * sizeof(int));
 
