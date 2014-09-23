@@ -1,10 +1,3 @@
-/*
- * strrev.c
- *
- *  Created on: Sep 19, 2014
- *      Author: gzach
- */
-
 /* Written by Gustavo Zach Vargas
  * 9/15/2014
  * cs 354 p1
@@ -20,7 +13,8 @@
 #include <unistd.h>
 
 /* strrev opens a file of ASCII numbers and uses a stack to reverse
- * the order and save the results to an output file */
+ * the order and save the results to an output file
+ */
 
 /* type def of node in stack */
 typedef struct node{
@@ -29,7 +23,8 @@ typedef struct node{
 }Node;
 
 
-/* push will add a new node at the head of the list 
+/* 
+ * push will add a new node at the head of the list 
  * 
  * @param: oldTOS pointer to old head(top of stack)
  * @return: newTOS pointer to the new head, or 0 for error
@@ -38,7 +33,7 @@ Node* push(Node* oldTOS, int valToPush){
 	/* dynamically allocate memory for new TOS node */
 	Node* newTOS =(Node*) malloc(sizeof(Node));
 
-	if(newTOS == NULL){
+	if (newTOS == NULL) {
 		return 0;
 	}
 	
@@ -46,22 +41,24 @@ Node* push(Node* oldTOS, int valToPush){
 	newTOS->value = valToPush;
 	
 	/* Hook new node to list */	
-	if(oldTOS == NULL){
+	if (oldTOS == NULL) {
 		newTOS->next = NULL;		
 	}
 	else{
 		newTOS->next = oldTOS;
 	}
+
 	return newTOS;
 }
 
-/* pop will remove the node at the top of the stack and return the new head 
+/*
+ * pop will remove the node at the top of the stack and return the new head 
  * 
  * @param: oldTOS pointer to old head(top of stack)
  * @return: data value of removed node, or 0 for error
  */
 int pop(Node **pstackptr){
-	if(pstackptr == NULL || (*pstackptr) == NULL){
+	if (pstackptr == NULL || (*pstackptr) == NULL) {
 		return 0;
 	}
 
@@ -93,12 +90,11 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    /***********************Open files ******************************************/
     /* try to open the input file */
     infile = argv[1];
     fdr = fopen(infile,"r");
     /* if there was a file open error, print message and exit */
-    if(fdr == NULL){
+    if (fdr == NULL) {
         fprintf(stderr, "usage: strtoboth error opening read file\n");
         exit(1);
     } 
@@ -106,33 +102,31 @@ int main(int argc, char *argv[])
     outfile = argv[2];
     fdw = fopen(outfile,"w");
     /* if there was a file open error, print message and exit */
-    if(fdw == NULL){
+    if (fdw == NULL) {
         fprintf(stderr, "usage: strtoboth error opening outfile 1\n");
         exit(1);
     }
 
-    /***********************Read Data ******************************************/
     /* Read in data check for end of file or read error (EOF) and push data onto stack
      * if either occurs, stop printing data */
-     while(fscanf(fdr, "%d\n", &intRead) != EOF){
+     while (fscanf(fdr, "%d\n", &intRead) != EOF) {
 	head_ptr = push(head_ptr,intRead);
      }
  
-    /***********************Write data ******************************************/
     /* pop data from stack and write to output file so that is is output in reverse order */
-    while(head_ptr != NULL){
+    while (head_ptr != NULL) {
 	fprintf(fdw, "%d\n",pop(&head_ptr));
     }
 
-    /***********************Close files ******************************************/
     /* Read in data check for end of file or read error (EOF) and push data onto stack
      * check if input file close was successful, if not print error message and exit */
-    if(fclose(fdr) != 0){
+    if (fclose(fdr) != 0) {
          fprintf(stderr, "usage: strtoboth error closing input file\n");
          exit(1);
      }
+
      /* check if first output file close was successful, if not print error message and exit */
-     if(fclose(fdw) != 0){
+     if (fclose(fdw) != 0) {
          fprintf(stderr, "usage: strtoboth error closing output1 file\n");
          exit(1);
      }

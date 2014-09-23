@@ -1,11 +1,3 @@
-/*
- * intrev.c
- *
- *  Created on: Sep 19, 2014
- *      Author: gzach
- */
-
-
 /* Written by Gustavo Zach Vargas
  * 9/15/2014
  * cs 354 p1
@@ -45,19 +37,22 @@ int main(int argc, char *argv[])
     /* try to open the file to read from */
     infile = argv[1];
     fdr = open(infile,O_RDONLY);
+
     /* if there was a file open error, print message and exit */
-    if(fdr == -1){
+    if (fdr == -1) {
 	fprintf(stderr, "usage: intrev could not open read file\n");
 	exit(1);
     }
 
     /* try to open the file to write to,
      * if the file doesnt exit, create; if the file is not empty, overwite
-     * file created with read and write permission */
+     * file created with read and write permission
+     */
     outfile = argv[2];
     fdw = open(outfile,O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR|S_IWUSR);
+
     /* if there was a file open error, print message and exit */
-    if(fdw == -1){
+    if (fdw == -1) {
 	fprintf(stderr, "usage: intrev could not open write file\n");
 	exit(1);
     }
@@ -68,8 +63,9 @@ int main(int argc, char *argv[])
 	fprintf(stderr, "usage: intrev could not read from file\n");
 	exit(1);
     }
-    fsize = fileStat.st_size;/*set fsize based on info from fstat*/
-    numInt = fsize/sizeof(int);/* num ints in file = file size (in bytes)/4 */
+
+    fsize = fileStat.st_size; /*set fsize based on info from fstat*/
+    numInt = fsize / sizeof(int); /* num ints in file = file size (in bytes)/4 */
 
     /* Dynamically allocate memory for array based on file size*/
     buffArr = malloc(numInt * sizeof(int));
@@ -78,27 +74,27 @@ int main(int argc, char *argv[])
      * if either occurs, stop printing data */
     readNum = read(fdr, buffArr , fsize);
 
-    if(readNum == -1){
+    if (readNum == -1) {
 	fprintf(stderr, "usage: intrev read failure\n");
 	exit(1);
     }
 
     /* traverse array backwards and print contents to file*/
-    for(i = numInt-1; i >= 0;  i--){
-	if(write(fdw,(buffArr + i),sizeof(int)) == -1){
+    for (i = numInt-1; i >= 0;  i--){
+	if (write(fdw,(buffArr + i),sizeof(int)) == -1) {
 		fprintf(stderr, "usage: intrev write to file failure\n");
 		exit(1);
 	}
     }
 
     /* check if close was successful, if not print error message and exit */
-    if(close(fdr) == -1){
+    if (close(fdr) == -1) {
 	fprintf(stderr, "usage: intrev error closing read  file\n");
 	exit(1);
     }
 
     /* check if close was successful, if not print error message and exit */
-    if(close(fdw) == -1){
+    if (close(fdw) == -1) {
 	fprintf(stderr, "usage: intrev error closing write file\n");
 	exit(1);
     }
