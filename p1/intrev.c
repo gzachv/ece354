@@ -70,6 +70,11 @@ int main(int argc, char *argv[])
     /* Dynamically allocate memory for array based on file size*/
     buffArr = malloc(numInt * sizeof(int));
 
+    if (buffArr == NULL) {
+	fprintf(stderr, "intrev malloc failure\n");
+	exit(1);
+    }
+
     /* check for end of file or read error (EOF)
      * if either occurs, stop printing data */
     readNum = read(fdr, buffArr , fsize);
