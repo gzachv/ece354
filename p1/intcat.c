@@ -12,7 +12,7 @@
 #include <assert.h>
 #include <unistd.h>
 
-#define MAX sizeof(int)*8
+#define MAX sizeof(int)
 
 /* This program reads an ACII file containing numbers
  * and writes the contents to the console as human readable ASCII
@@ -22,8 +22,7 @@ int main(int argc, char *argv[])
 	char *infile;
 	int fd;
 	int readNum;
-	int buffer[MAX];
-	int i;
+	int intRead;
 
 	/* if a single command line argument is not specified, print usage
 	 * information and exit
@@ -42,17 +41,19 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	/* check for end of file or read error (EOF)
+	/* read data while not at end of file and no error
 	 * if either occurs, stop printing data */
-	readNum = read(fd, buffer, MAX);
-	if(readNum == -1){
-		fprintf(stderr, "usage: incat read failure\n");
-		exit(1);
-	}
-
-	/* print out the contents of the buffer to the console */
-	for(i = 0; i < readNum/4; i++){
-		printf("%d\n",buffer[i]);
+	readNum = read(fd, &intRead, MAX);
+	
+	while (readNum != 0){
+		
+		if (readNum == -1){
+			fprintf(stderr, "usage: incat read failure\n");
+			exit(1);
+		}
+		
+		printf("%d\n",intRead);
+		readNum = read(fd, &intRead, MAX);
 	}
 
 	/* check if close was successful, if not print error message and exit */
