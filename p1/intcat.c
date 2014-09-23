@@ -35,8 +35,9 @@ int main(int argc, char *argv[])
 	/* try to open the file */
 	infile = argv[1];
 	fd = open(infile,O_RDONLY);
+
 	/* if there was a file open error, print message and exit */
-	if(fd == -1){
+	if (fd == -1) {
 		fprintf(stderr, "usage: intcat file read error\n");
 		exit(1);
 	}
@@ -45,9 +46,9 @@ int main(int argc, char *argv[])
 	 * if either occurs, stop printing data */
 	readNum = read(fd, &intRead, MAX);
 	
-	while (readNum != 0){
+	while (readNum != 0) {
 		
-		if (readNum == -1){
+		if (readNum == -1) {
 			fprintf(stderr, "usage: incat read failure\n");
 			exit(1);
 		}
@@ -58,7 +59,7 @@ int main(int argc, char *argv[])
 	}
 
 	/* check if close was successful, if not print error message and exit */
-	if(close(fd) == -1){
+	if (close(fd) == -1) {
 		fprintf(stderr, "usage: intcat error closing file\n");
 		exit(1);
 	}
