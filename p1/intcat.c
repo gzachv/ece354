@@ -51,7 +51,8 @@ int main(int argc, char *argv[])
 			fprintf(stderr, "usage: incat read failure\n");
 			exit(1);
 		}
-		
+	
+		/* print out the int read from each line, read in a new int */	
 		printf("%d\n",intRead);
 		readNum = read(fd, &intRead, MAX);
 	}
