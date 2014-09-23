@@ -1,11 +1,3 @@
-/*
- * strtoboth.c
- *
- *  Created on: Sep 19, 2014
- *      Author: gzach
- */
-
-
 /* Written by Gustavo Zach Vargas
  * 9/15/2014
  * cs 354 p1
@@ -49,7 +41,7 @@ int main(int argc, char *argv[])
     infile = argv[1];
     fdr = fopen(infile,"r");
     /* if there was a file open error, print message and exit */
-    if(fdr == NULL){
+    if (fdr == NULL) {
 	fprintf(stderr, "usage: strtoboth error opening read file\n");
 	exit(1);
     }
@@ -57,7 +49,7 @@ int main(int argc, char *argv[])
     /* try to open the first output file */
     writefile = open(argv[2],O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR|S_IWUSR);
     /* if there was a file open error, print message and exit */
-    if(writefile == -1){
+    if (writefile == -1) {
 	fprintf(stderr, "usage: strtoboth error opening outfile 1\n");
 	exit(1);
     }
@@ -66,66 +58,73 @@ int main(int argc, char *argv[])
     outfile2 = argv[3];
     fdw2 = fopen(outfile2,"w");
     /* if there was a file open error, print message and exit */
-    if(fdw2 == NULL){
+    if (fdw2 == NULL){
 	fprintf(stderr, "usage: strtoboth error opening outfile 2\n");
 	exit(1);
     }
 
-
-    
-    /*****************print data to output file 2 as modified ASCII **********************/
-    /* Read in data check for end of file or read error (EOF) and print data
-     * if either occurs, stop printing data */
-    while(fscanf(fdr, "%d\n", &intRead) != EOF){
-	if(intRead < 0){
-		fprintf(fdw2,"- %d;\n",abs(intRead));
+    /*print data to output file 2 as modified ASCII:
+     * Read in data check for end of file or read error (EOF) and print data
+     * if either occurs, stop printing data
+     */
+    while (fscanf(fdr, "%d\n", &intRead) != EOF) {
+	if (intRead < 0) {
+		fprintf(fdw2, "- %d;\n", abs(intRead));
 	}      
 	else{
-		fprintf(fdw2,"%d;\n",intRead);
+		fprintf(fdw2, "%d;\n", intRead);
 	}
     }
 
 
-    /*****************close read and output2 file **********************/
-    /* check if input file close was successful, if not print error message and exit */
-    if(fclose(fdr) != 0){
+    /* close read and output2 file:
+     * check if input file close was successful, if not print error message and exit 
+     */
+    if (fclose(fdr) != 0) {
 	fprintf(stderr, "usage: strtoboth error closing input file\n");
 	exit(1);
     }
 
     /* check if second output file close was successful, if not print error message and exit */
-    if(fclose(fdw2) != 0){
+    if (fclose(fdw2) != 0) {
 	fprintf(stderr, "usage: strtoboth error closing output2 file\n");
 	exit(1);
     }
 
-    /*****************reopen readfile for int reading **********************/
-    /* try to reopen the input file */
-    readfile = open(argv[1],O_RDONLY);
+    /* reopen readfile for int reading:
+     * try to reopen the input file 
+     */
+    readfile = open(argv[1], O_RDONLY);
     /* if there was a file open error, print message and exit */
-    if(readfile == -1){
+    if (readfile == -1) {
 	fprintf(stderr, "usage: strtoboth error opening outfile 1\n");
 	exit(1);
     }
  
-    /*****************print data to output file 1 as integers **********************/
-    while(read(readfile,numRead,sizeof(int)) > 0){
- 	intRead = atoi(numRead);
-	if(write(writefile,&intRead, sizeof(int)) != sizeof(int)) {
+    /* print data to output file 1 as integers */
+    while (read(readfile, numRead, sizeof(int)) > 0) {
+ 	
+	intRead = atoi(numRead); /* convert to integer */
+	
+	/* Display error if the varible written to the output file 
+ 	 * is not the size of an integer
+ 	 */
+	if (write(writefile, &intRead, sizeof(int)) != sizeof(int)) {
            	 fprintf (stderr, "usage: strtoboth bad write to file \n");
            	 exit(1);
             }
     }
 
-    /*****************close output file 1 and input file **********************/
-    /* check if first output file close was successful, if not print error message and exit */
-    if(close(writefile) == -1){
+    /* close output file 1 and input file
+     * check if first output file close was successful, if not print error message and exit
+     */
+    if (close(writefile) == -1) {
 	fprintf(stderr, "usage: strtoboth error closing output1 file\n");
 	exit(1);
     }
 
     /* check if input file close was successful, if not print error message and exit */
-    if(close(readfile) == -1){
+    if (close(readfile) == -1) {
 	fprintf(stderr, "usage: strtoboth error closing input file\n");
 	exit(1);
     }
