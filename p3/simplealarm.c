@@ -2,8 +2,12 @@
  * by Gustavo Zach Vargas, Section 1
  *
  * This program contains is a simple alarm program. The alarm is armed
- * and set to go off every one seconds. When the alarm 'sounds' it 
- * triggers a SIGALRM interrupt.
+ * and set to go off every one seconds(specified by global variable armTime).
+ * When the alarm 'sounds' it triggers a SIGALRM interrupt and prints the current time.
+ * The program also
+ * counts up to a random number between 0 and ninety million (increments of ten million).
+ * The purpose of the coutning in the infinite loop is simply to waste processor time.
+ * Each time the count is completed, a single period char is printed.
  */
 
 
