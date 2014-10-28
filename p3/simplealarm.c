@@ -24,7 +24,8 @@
 
 static int armTime = 1;
 
-/*
+/* handler is the interrupt handler for the SIGINT signal triggered when the alarm
+ * library function is triggered. The handler prints the current time and rearms the alarm.
  *
  */
 static void handler(int signum) {
@@ -41,7 +42,9 @@ static void handler(int signum) {
    alarm(armTime);
 }
 
-/* 
+/* The main method sets up an interrupt handler and then enters an infinite loop.
+ * In this loop the program counts up to a random (seeded) number between 0 and ninty million
+ * (increments of 10 million).
  *
  */
 int main(int argc, char* argv[]) {
@@ -63,7 +66,7 @@ int main(int argc, char* argv[]) {
 
  while(1) {
 
-   cntMax = (random()%10)*10000000;
+   cntMax = (random()%10)*10000000; /* takes the last digit of a random, scales it by 10 million*/
 
    for (counter = 0; counter < cntMax; counter++) {
    }
