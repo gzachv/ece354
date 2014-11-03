@@ -10,12 +10,6 @@
  * Each time the count is completed, a single period char is printed.
  */
 
-
-/*
- * TODO 
- * do we have to check the return value of alarm
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -33,11 +27,21 @@ static void handler(int signum) {
   
    /* 
     * Calling time with a non-NULL param causes the current time to be stored
-    * at the memory pointed to by curtime
+    * at the memory pointed to by curtime, time returns (time_t) -1 on error
     */ 
-   time(&curtime);
+   if (time(&curtime) == (time_t) -1) {
+     fprintf(stderr, "Error calling time. Quitting.");
+     exit(1);
+   }
+   
+   char* fTime = ctime(&curtime);
+   
+   if (fTime == NULL) {
+     fprintf(stderr, "Error calling ctime. Quitting.");
+     exit(1);
+   }
 
-   printf("\ncurrent time is %s", ctime(&curtime));
+   printf("\ncurrent time is %s", fTime);
 
    alarm(armTime);
 }
