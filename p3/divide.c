@@ -6,9 +6,6 @@
  * Additionally, the program monitors for interrrupts of SIGINT (caused by ^C) and SIGFPE from
  * divide by zero errors. These interrupts are handled by specified handlers.
  *
- * TODO 
- * what size to make buffer
- * static needed?
  */
 
 #include <stdio.h>
